@@ -1,17 +1,18 @@
 import { cart } from "../../cart";
 import { Request, Response, NextFunction } from "express";
+import cartItemService from "./cart-item.service";
 
-export const list = (req: Request, res: Response, next: NextFunction) => {
-  res.json(cart);
+export const list = async (req: Request, res: Response, next: NextFunction) => {
+  const list = await cartItemService.find();
+  res.json(list);
 };
 
-export const add = (req: Request, res: Response, next: NextFunction) => {
-  const toAdd = req.body;
-  cart.push(toAdd);
-  res.json(toAdd);
+export const add = async(req: Request, res: Response, next: NextFunction) => {
+  const newItem = await cartItemService.add(req.body);
+  res.json(newItem);
 };
 
-export const updateQuantity = (req: Request, res: Response, next: NextFunction
+export const updateQuantity = async (req: Request, res: Response, next: NextFunction
 ) => {
   const id = req.params.id;
   const newQuantity = req.body.quantity;
@@ -20,16 +21,18 @@ export const updateQuantity = (req: Request, res: Response, next: NextFunction
     res.send("invalid quantity");
     return;
   }
-
-  const item = cart.find(item => item.id === id);
-  if(!item){
-    res.status(404);
-    res.send();
-    return;
+  try{
+    const updated = await cartItemService.update(id, {quantity: newQuantity});
+    res.json(updated);
+  }catch(err: any) {
+    if(err.message === "Not Found"){
+      res.status(404);
+      res.send();
+    }else{
+      next(err);
+    }
   }
-
-  item.quantity = newQuantity;
-  res.send(item);
+  
 };
 
 export const remove = (req: Request, res: Response, next: NextFunction
