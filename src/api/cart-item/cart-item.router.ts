@@ -1,12 +1,12 @@
 import { Router } from "express";
-import { add, list, toBeImplemented, updateQuantity } from "./cart-item.controller";
+import { add, list, remove, toBeImplemented, updateQuantity } from "./cart-item.controller";
 
 const router = Router();
 
 router.get('/',list);
 router.post('/',add);
 router.patch('/:id',updateQuantity);
-router.delete('/:id', toBeImplemented);
+router.delete('/:id', remove);
 
 
 export default router;
