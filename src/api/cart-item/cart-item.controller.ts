@@ -1,5 +1,3 @@
-import { products } from './../../products';
-import { cart } from "../../cart";
 import { Request, Response, NextFunction } from "express";
 import cartItemService from "./cart-item.service";
 import productService from '../product/product.service';
