@@ -1,4 +1,3 @@
-import { products } from './../../products';
 import { Request, Response, NextFunction } from "express";
 import { ProductService } from './product.service';
 

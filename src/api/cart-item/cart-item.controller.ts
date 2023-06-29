@@ -1,6 +1,9 @@
+import { products } from './../../products';
 import { cart } from "../../cart";
 import { Request, Response, NextFunction } from "express";
 import cartItemService from "./cart-item.service";
+import productService from '../product/product.service';
+
 
 export const list = async (req: Request, res: Response, next: NextFunction) => {
   const list = await cartItemService.find();
@@ -8,8 +11,23 @@ export const list = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 export const add = async(req: Request, res: Response, next: NextFunction) => {
-  const newItem = await cartItemService.add(req.body);
-  res.json(newItem);
+  const {id, quantity} = req.body;
+  const product = productService.getById(id);
+  try{
+    if(!product){
+      res.status(404);
+      res.send();
+      return;
+    }
+    const newItem = {
+      ...product,
+      quantity
+    };
+    const saved = await cartItemService.add(newItem);
+    res.json(saved);
+  }catch(err){
+    next(err);
+  }
 };
 
 export const updateQuantity = async (req: Request, res: Response, next: NextFunction
@@ -35,20 +53,21 @@ export const updateQuantity = async (req: Request, res: Response, next: NextFunc
   
 };
 
-export const remove = (req: Request, res: Response, next: NextFunction
+export const remove = async (req: Request, res: Response, next: NextFunction
   ) => {
     const id = req.params.id;
-    const index = cart.findIndex(item => item.id === id);
-    if(index === -1){
-      res.status(404);
+    try{
+      await cartItemService.remove(id);
+      res.status(204);
       res.send();
-      return;
+    }catch(err: any){
+      if(err.message === "Not Found"){
+        res.status(404);
+        res.send();
+      }else{
+        next(err);  
+      }
     }
-    cart.splice(index, 1);
-    res.status(204);
-    res.send();
+    
   }
 
-export const toBeImplemented = (req, res, next) => {
-  res.send("to be implemented");
-};

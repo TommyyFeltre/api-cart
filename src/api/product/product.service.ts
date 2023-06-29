@@ -1,12 +1,14 @@
-import { products } from "../../products";
+import PRODUCTS from "../../../product.json";
 
 export class ProductService{
 
     async find() {
-        return products;
+        return PRODUCTS;
     }
     
     async getById(id: string) {
-        return products.find(i => i.id === id) || null;
+        return PRODUCTS.find(i => i.id === id) || null;
     }
 }
+
+export default new ProductService;

@@ -1,4 +1,4 @@
-import { cart } from "../../cart";
+import cart from "../../../product.json";
 import { assign } from "lodash";
 
 export class CartItemService{

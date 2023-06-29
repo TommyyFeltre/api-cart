@@ -6,6 +6,7 @@
   "scripts": {
     "start": "ts-node src/index.ts",
     "dev": "nodemon",
+    "gendata": "ts-node example-data.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "nodemonConfig": {
@@ -28,6 +29,7 @@
     "morgan": "^1.10.0"
   },
   "devDependencies": {
+    "@faker-js/faker": "^8.0.2",
     "@types/body-parser": "^1.19.2",
     "@types/cors": "^2.8.13",
     "@types/express": "^4.17.17",
