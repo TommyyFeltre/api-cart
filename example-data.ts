@@ -5,7 +5,6 @@ import { writeFileSync } from 'node:fs';
 
 function generateRandomProduct(){
     return{
-        id: faker.database.mongodbObjectId(),
         name: faker.commerce.productName(),
         description: faker.commerce.productDescription(),
         netPrice: parseFloat(faker.commerce.price()),

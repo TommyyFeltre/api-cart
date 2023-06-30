@@ -1,21 +1,23 @@
-import cart from "../../../product.json";
 import { assign } from "lodash";
+import { CartItem } from "./cart-item.entity";
+const CART: CartItem[] = [];
+
 
 export class CartItemService{
-    async find(){
-        return cart;
+    async find(): Promise<CartItem[]>{
+        return CART;
     }
 
-    async getById(id: string){
-        return cart.find(item => item.id === id) || null;
+    async getById(id: string): Promise<CartItem | null>{
+        return CART.find(item => item.id === id) || null;
     }
 
-    async add(item: any){
-        cart.push(item);
+    async add(item: CartItem): Promise<CartItem>{
+        CART.push(item);
         return item;
     }
 
-    async update(id: string, data: any){
+    async update(id: string, data: Partial<CartItem>): Promise<CartItem>{
         const item = await this.getById(id);
         if(!item){
             throw Error("Not Found");
@@ -24,12 +26,12 @@ export class CartItemService{
         return item;
     }
 
-    async remove(id: string){
-        const index = cart.findIndex(item => item.id === id);
+    async remove(id: string): Promise<void>{
+        const index = CART.findIndex(item => item.id === id);
         if(index === -1){
             throw Error("Not Found");
         }
-        cart.splice(index, 1);
+        CART.splice(index, 1);
     }
 }
 

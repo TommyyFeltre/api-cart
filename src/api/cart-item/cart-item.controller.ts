@@ -1,34 +1,42 @@
 import { Request, Response, NextFunction } from "express";
 import cartItemService from "./cart-item.service";
-import productService from '../product/product.service';
-
+import productService from "../product/product.service";
+import { CartItem } from "./cart-item.entity";
+import { TypedRequest } from "../../utils/typed-request.interface";
 
 export const list = async (req: Request, res: Response, next: NextFunction) => {
   const list = await cartItemService.find();
   res.json(list);
 };
 
-export const add = async(req: Request, res: Response, next: NextFunction) => {
-  const {id, quantity} = req.body;
-  const product = productService.getById(id);
-  try{
-    if(!product){
+export const add = async (
+  req: TypedRequest<{id: string, quantity: number}>,
+  res: Response<CartItem>,
+  next: NextFunction
+) => {
+  const { id, quantity } = req.body;
+  const product = await productService.getById(id);
+  try {
+    if (!product) {
       res.status(404);
       res.send();
       return;
     }
-    const newItem = {
+    const newItem: CartItem = {
       ...product,
-      quantity
+      quantity,
     };
     const saved = await cartItemService.add(newItem);
     res.json(saved);
-  }catch(err){
+  } catch (err) {
     next(err);
   }
 };
 
-export const updateQuantity = async (req: Request, res: Response, next: NextFunction
+export const updateQuantity = async (
+  req: TypedRequest<{quantity: number}>,
+  res: Response,
+  next: NextFunction
 ) => {
   const id = req.params.id;
   const newQuantity = req.body.quantity;
@@ -37,35 +45,35 @@ export const updateQuantity = async (req: Request, res: Response, next: NextFunc
     res.send("invalid quantity");
     return;
   }
-  try{
-    const updated = await cartItemService.update(id, {quantity: newQuantity});
+  try {
+    const updated = await cartItemService.update(id, { quantity: newQuantity });
     res.json(updated);
-  }catch(err: any) {
-    if(err.message === "Not Found"){
+  } catch (err: any) {
+    if (err.message === "Not Found") {
       res.status(404);
       res.send();
-    }else{
+    } else {
       next(err);
     }
   }
-  
 };
 
-export const remove = async (req: Request, res: Response, next: NextFunction
-  ) => {
-    const id = req.params.id;
-    try{
-      await cartItemService.remove(id);
-      res.status(204);
+export const remove = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const id = req.params.id;
+  try {
+    await cartItemService.remove(id);
+    res.status(204);
+    res.send();
+  } catch (err: any) {
+    if (err.message === "Not Found") {
+      res.status(404);
       res.send();
-    }catch(err: any){
-      if(err.message === "Not Found"){
-        res.status(404);
-        res.send();
-      }else{
-        next(err);  
-      }
+    } else {
+      next(err);
     }
-    
   }
-
+};
