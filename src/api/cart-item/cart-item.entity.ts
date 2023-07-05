@@ -1,6 +1,8 @@
-import { updateQuantity } from './cart-item.controller';
-import { Product } from "../product/product.entity";
+import { Types } from "mongoose"
+import { Product } from "../product/product.entity"
 
-export interface CartItem extends Product{
-    quantity: number;
+export interface CartItem{
+    id?: string,
+    product: Types.ObjectId | string | Product,
+    quantity: number
 }

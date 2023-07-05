@@ -3,6 +3,7 @@ import cors from "cors";
 import morgan from "morgan";
 import apiRouter from "./api/routers";
 import bodyParser from "body-parser";
+import { errorHandler } from "./errors";
 
 const app = express();
 
@@ -22,5 +23,8 @@ app.get("/", (req: Request, res: Response, next: NextFunction) => {
 app.listen(3000, () => {
   console.log("server listening on port 3000");
 });
+
+app.use(errorHandler);
+
 
 export default app;
