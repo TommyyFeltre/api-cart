@@ -5,7 +5,8 @@ import { NotFoundError } from "../../errors/not-founds";
 const productService = new ProductService();
 
 export const list = async (req: Request, res: Response, next: NextFunction) => {
-    const products = await productService.find();
+    console.log(req.query);
+    const products = await productService.find(req.query);
     res.json(products);
 };
 
