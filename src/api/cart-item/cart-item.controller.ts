@@ -6,6 +6,10 @@ import { TypedRequest } from "../../utils/typed-request.interface";
 import { NotFoundError } from "../../errors/not-founds";
 import { th } from "@faker-js/faker";
 import { genericErrorHandler } from "../../errors/generic";
+import { plainToClass } from "class-transformer";
+import { AddCartItemDTO, updateQuantityDTO } from "./cart-item.dto";
+import { validate } from 'class-validator';
+import { ValidationError } from "../../errors/validation-error";
 
 export const list = async (req: Request, res: Response, next: NextFunction) => {
   const list = await cartItemService.find();
@@ -17,9 +21,11 @@ export const add = async (
   res: Response<CartItem>,
   next: NextFunction
 ) => {
-  const { id, quantity } = req.body;
-  const product = await productService.getById(id);
   try {
+    
+    const { id, quantity } = req.body;
+    const product = await productService.getById(id);
+
     if (!product) {
       throw new NotFoundError();
     }
@@ -40,13 +46,8 @@ export const updateQuantity = async (
   next: NextFunction
 ) => {
   const id = req.params.id;
-  const newQuantity = req.body.quantity;
-  if (newQuantity === undefined || newQuantity < 0 || newQuantity > 10) {
-      res.status(400);
-      res.send("invalid quantity");
-      return;
-  }
   try {
+    const newQuantity = req.body.quantity;
     const updated = await cartItemService.update(id, { quantity: newQuantity });
     res.json(updated);
   } catch (err: any) {
