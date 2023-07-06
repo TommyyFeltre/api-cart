@@ -1,12 +1,14 @@
+import { QueryProductDTO } from './product.dto';
+import { FilterQuery } from "mongoose";
 import { Product } from "./product.entity";
 import { Product as ProductModel } from "./product.model";
 
 export class ProductService{
 
-    async find(query: any): Promise<Product[]>{
-        const q: any = {};
+    async find(query: QueryProductDTO): Promise<Product[]>{
+        const q: FilterQuery<Product> = {};
         if(query.name){
-            q.name = query.name;
+            q.name = {$regex: new RegExp(`${query.name}`, 'i')};
         }if(query.minPrice !== undefined || query.maxPrice !== undefined){
             q.netPrice = {};
         }

@@ -17,7 +17,7 @@ export const list = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 export const add = async (
-  req: TypedRequest<{id: string, quantity: number}>,
+  req: TypedRequest<AddCartItemDTO>,
   res: Response<CartItem>,
   next: NextFunction
 ) => {
@@ -41,7 +41,7 @@ export const add = async (
 };
 
 export const updateQuantity = async (
-  req: TypedRequest<{quantity: number}>,
+  req: TypedRequest<updateQuantityDTO>,
   res: Response,
   next: NextFunction
 ) => {
