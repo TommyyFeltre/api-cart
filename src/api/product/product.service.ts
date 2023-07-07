@@ -3,6 +3,7 @@ import { FilterQuery } from "mongoose";
 import { Product } from "./product.entity";
 import { Product as ProductModel } from "./product.model";
 
+
 export class ProductService{
 
     async find(query: QueryProductDTO): Promise<Product[]>{
